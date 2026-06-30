@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Servicios</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .form-nueva { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 24px; }
+        .form-nueva div { display: flex; flex-direction: column; gap: 4px; }
+        .form-nueva label { font-size: 0.78em; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; }
+        .form-nueva input, .form-nueva select { padding: 7px 10px; border: 1px solid var(--borde); border-radius: 4px; font-size: 0.9em; width: 150px; }
+        .form-nueva button { padding: 7px 16px; background: var(--texto); color: white; border: none; border-radius: 4px; cursor: pointer; height: 34px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/servicios">Servicios</a>
+        <a href="/profesionales">Profesionales</a>
+        <a href="/boxes">Boxes</a>
+        <a href="/clientes">Clientes</a>
+        <a href="/stock/productos">Productos</a>
+    </div>
+    <div class="acciones">
+        <a class="btn-destacado" href="/metricas">Ver metricas</a>
+    </div>
+</nav>
+
+<h1>Servicios</h1>
+
+<form class="form-nueva" action="/servicios/crear" method="post">
+    <div>
+        <label>Nombre</label>
+        <input type="text" name="nombre" placeholder="Ej: Limpieza facial" required style="width:200px;">
+    </div>
+    <div>
+        <label>Duración (min)</label>
+        <input type="number" name="duracion_min" placeholder="60" required>
+    </div>
+    <div>
+        <label>Precio tarjeta/QR</label>
+        <input type="number" name="precio_tarjeta" placeholder="37500" required>
+    </div>
+    <div>
+        <label>Precio efectivo</label>
+        <input type="number" name="precio_contado" placeholder="30000" required>
+    </div>
+    <div>
+        <label>Capacidad</label>
+        <select name="capacidad_requerida">
+            <option value="1">1 persona</option>
+            <option value="2">2 personas</option>
+        </select>
+    </div>
+    <button type="submit">Agregar</button>
+</form>
+
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Duración</th>
+        <th>Tarjeta / QR</th>
+        <th>Efectivo</th>
+        <th>Capacidad</th>
+        <th>Acciones</th>
+    </tr>
+    {% for s in servicios %}
+    <tr>
+        <td>{{ s.nombre }}</td>
+        <td>{{ s.duracion_min }} min</td>
+        <td>${{ "%.0f"|format(s.precio_tarjeta) }}</td>
+        <td>${{ "%.0f"|format(s.precio_contado) }}</td>
+        <td>{{ s.capacidad_requerida }}</td>
+        <td>
+            <a href="/servicios/editar/{{ s.id }}">Editar</a> ·
+            <a href="/servicios/eliminar/{{ s.id }}"
+               onclick="return confirm('Eliminar este servicio?')"
+               style="color:var(--rojo)">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

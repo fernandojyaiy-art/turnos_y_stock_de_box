@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Turno</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .form-bloque { max-width: 480px; }
+        .seccion { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--borde); }
+        .fila { display: flex; gap: 12px; }
+        .fila > div { flex: 1; }
+        .radio-grupo { display: flex; gap: 16px; margin-top: 6px; }
+        .radio-grupo label { font-weight: normal; font-size: 0.9em; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .aviso-pendiente { background: #fffbeb; border: 1px solid #fde68a; padding: 14px; border-radius: 4px; margin-bottom: 16px; }
+        .aviso-pendiente p { margin-bottom: 8px; font-size: 0.9em; }
+        .aviso-acciones { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .saldo-info { background: var(--bg); border: 1px solid var(--borde); padding: 10px 14px; border-radius: 4px; font-size: 0.88em; color: var(--texto-suave); margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">← Volver a la agenda</a>
+    </div>
+</nav>
+
+<h1>Nuevo turno — {{ hora }} hs</h1>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+{% if turno_pendiente %}
+<div class="aviso-pendiente">
+    <p><strong>Aviso:</strong> El box ya tiene un turno PENDIENTE a las {{ hora }}:</p>
+    <p>Cliente: <strong>{{ turno_pendiente.cliente.nombre }} {{ turno_pendiente.cliente.apellido }}</strong>
+       — {{ turno_pendiente.servicio.nombre }}</p>
+    <div class="aviso-acciones">
+        <a class="btn-destacado" href="/turnos/{{ turno_pendiente.id }}/editar">Modificar ese turno</a>
+        <form method="post" action="/crear" style="margin:0">
+            <input type="hidden" name="hora" value="{{ hora }}">
+            <input type="hidden" name="fecha" value="{{ fecha }}">
+            <input type="hidden" name="profesional_id" value="{{ form_profesional_id }}">
+            <input type="hidden" name="servicio_id" value="{{ form_servicio_id }}">
+            <input type="hidden" name="box_id" value="{{ form_box_id }}">
+            <input type="hidden" name="nombre1" value="{{ form_nombre1 }}">
+            <input type="hidden" name="apellido1" value="{{ form_apellido1 }}">
+            <input type="hidden" name="telefono1" value="{{ form_telefono1 }}">
+            <input type="hidden" name="descripcion" value="{{ form_descripcion }}">
+            <button class="btn-secundario" type="submit">Guardar igual (dos en el box)</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<form class="form-bloque" action="/crear" method="post">
+    <input type="hidden" name="hora" value="{{ hora }}">
+    <input type="hidden" name="fecha" value="{{ fecha }}">
+
+    <div class="form-bloque">
+        <label>Profesional</label>
+        <select name="profesional_id" required>
+            {% for p in profesionales %}
+                <option value="{{ p.id }}" {{ "selected" if form_profesional_id == p.id }}>{{ p.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Box</label>
+        <select name="box_id" required>
+            {% for b in boxes %}
+                <option value="{{ b.id }}" {{ "selected" if form_box_id == b.id }}>{{ b.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Servicio</label>
+        <select name="servicio_id" id="servicio">
+            {% for s in servicios %}
+                <option value="{{ s.id }}"
+                    data-capacidad="{{ s.capacidad_requerida }}"
+                    data-precio-tarjeta="{{ s.precio_tarjeta }}"
+                    data-precio-contado="{{ s.precio_contado }}"
+                    {{ "selected" if form_servicio_id == s.id }}>
+                    {{ s.nombre }} ({{ s.duracion_min }} min)
+                </option>
+            {% endfor %}
+        </select>
+
+        <div class="seccion">
+            <label>Estado del turno</label>
+            <div class="radio-grupo">
+                <label><input type="radio" name="confirmado" value="false" checked> Pendiente</label>
+                <label><input type="radio" name="confirmado" value="true"> Confirmado (con seña)</label>
+            </div>
+
+            <div id="seña-campos" style="display:none; margin-top:12px;">
+                <label>Monto de seña recibido</label>
+                <input type="number" name="monto_seña" value="15000" id="monto-seña">
+                <div class="saldo-info" id="saldo-info"></div>
+            </div>
+        </div>
+
+        <div class="seccion">
+            <label>Forma de pago del saldo (cuando venga)</label>
+            <div class="radio-grupo">
+                <label><input type="radio" name="forma_pago" value="tarjeta" checked> Tarjeta / QR / Transferencia</label>
+                <label><input type="radio" name="forma_pago" value="efectivo"> Efectivo</label>
+            </div>
+            <div class="saldo-info" id="precio-info" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="seccion">
+            <h3>Cliente</h3>
+            <label>Nombre</label>
+            <input type="text" name="nombre1" value="{{ form_nombre1 or '' }}" required>
+            <label>Apellido</label>
+            <input type="text" name="apellido1" value="{{ form_apellido1 or '' }}">
+            <label>Teléfono</label>
+            <input type="text" name="telefono1" value="{{ form_telefono1 or '' }}">
+        </div>
+
+        <div id="cliente2" style="display:none;" class="seccion">
+            <h3>Cliente 2</h3>
+            <label>Nombre</label>
+            <input type="text" name="nombre2">
+            <label>Apellido</label>
+            <input type="text" name="apellido2">
+            <label>Teléfono</label>
+            <input type="text" name="telefono2">
+        </div>
+        <div class="seccion">
+            <label>Descripción del tratamiento</label>
+                <textarea
+                name="descripcion"
+                rows="5"
+                placeholder="Observaciones del tratamiento...">{{ form_descripcion or "" }}</textarea>
+        </div>
+       
+        <div class="seccion">
+            <label>Recomendación de productos / rutina</label>
+                <textarea
+                    name="recomendacion"
+                    rows="5"
+                    placeholder="Ej: Sérum Libra vitamina C de noche. Hidratante Libra piel mixta...">{{ form_recomendacion or "" }}</textarea>
+        </div>
+
+        <button type="submit" style="margin-top:24px;" class="btn-destacado">Guardar turno</button>
+    </div>
+</form>
+
+<script>
+function precioActual() {
+    const select = document.getElementById("servicio");
+    const opt = select.options[select.selectedIndex];
+    const formaPago = document.querySelector('input[name="forma_pago"]:checked').value;
+    return formaPago === "efectivo"
+        ? parseFloat(opt.getAttribute("data-precio-contado"))
+        : parseFloat(opt.getAttribute("data-precio-tarjeta"));
+}
+
+function formatPeso(n) {
+    return "$" + n.toLocaleString("es-AR", { maximumFractionDigits: 0 });
+}
+
+function actualizarInfo() {
+    const precio = precioActual();
+    const seña = parseFloat(document.getElementById("monto-seña").value) || 0;
+    const confirmado = document.querySelector('input[name="confirmado"]:checked').value === "true";
+    const saldo = precio - (confirmado ? seña : 0);
+
+    // Info de precio
+    const formaPago = document.querySelector('input[name="forma_pago"]:checked').value;
+    document.getElementById("precio-info").textContent =
+        `Precio ${formaPago === "efectivo" ? "efectivo" : "tarjeta/QR"}: ${formatPeso(precio)}`;
+
+    // Info de saldo si hay seña
+    if (confirmado) {
+        document.getElementById("saldo-info").textContent =
+            `Seña: ${formatPeso(seña)} — Saldo a cobrar cuando venga: ${formatPeso(saldo)}`;
+    }
+
+    // Mostrar/ocultar campos de seña
+    document.getElementById("seña-campos").style.display = confirmado ? "block" : "none";
+
+    // Mostrar/ocultar cliente 2
+    const select = document.getElementById("servicio");
+    const capacidad = select.options[select.selectedIndex].getAttribute("data-capacidad");
+    document.getElementById("cliente2").style.display = capacidad == "2" ? "block" : "none";
+}
+
+document.querySelectorAll('input[name="confirmado"]').forEach(r => r.addEventListener("change", actualizarInfo));
+document.querySelectorAll('input[name="forma_pago"]').forEach(r => r.addEventListener("change", actualizarInfo));
+document.getElementById("servicio").addEventListener("change", actualizarInfo);
+document.getElementById("monto-seña").addEventListener("input", actualizarInfo);
+
+actualizarInfo();
+</script>
+
+</body>
+</html>

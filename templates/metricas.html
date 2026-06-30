@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Metricas</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .periodos { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+        .tarjeta { background: var(--bg-card); border: 1px solid var(--borde); border-radius: var(--radio); padding: 18px 20px; }
+        .periodo-label { font-size: 0.72em; text-transform: uppercase; letter-spacing: 0.8px; color: var(--texto-suave); font-weight: 600; margin-bottom: 10px; }
+        .monto-servicios { font-size: 1.8em; font-weight: 700; color: var(--texto); letter-spacing: -0.5px; }
+        .turnos-cantidad { font-size: 0.82em; color: var(--texto-suave); margin-top: 3px; }
+        .monto-productos { font-size: 0.95em; color: var(--acento); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--borde); }
+        .total-combinado { font-size: 0.8em; color: var(--texto-suave); margin-top: 3px; }
+        .rankings { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 20px; }
+        .ranking-card { background: var(--bg-card); border: 1px solid var(--borde); border-radius: var(--radio); padding: 18px 20px; }
+        .ranking-card ol { padding-left: 18px; }
+        .ranking-card li { padding: 6px 0; border-bottom: 1px solid var(--borde); font-size: 0.88em; }
+        .ranking-card li:last-child { border-bottom: none; }
+        .cantidad { float: right; color: var(--texto-suave); font-size: 0.85em; }
+        .dias-badge { background: #fef3c7; color: var(--amarillo); padding: 2px 8px; border-radius: 20px; font-size: 0.8em; font-weight: 600; }
+
+        /* Selector de período */
+        .selector-periodo {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .btn-periodo {
+            padding: 7px 16px;
+            border: 1px solid var(--borde);
+            border-radius: var(--radio);
+            background: white;
+            color: var(--texto-suave);
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .btn-periodo:hover { border-color: var(--texto); color: var(--texto); text-decoration: none; }
+        .btn-periodo.activo { background: var(--texto); color: white; border-color: var(--texto); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/clientes">Clientes</a>
+        <a href="/stock/productos">Productos</a>
+        <a href="/metricas">Metricas</a>
+    </div>
+</nav>
+
+<h1>Tablero de metricas</h1>
+
+<!-- SELECTOR DE PERIODO -->
+<div class="selector-periodo">
+    <a class="btn-periodo {{ 'activo' if datos.periodo == 'esta_semana' else '' }}"
+       href="/metricas?periodo=esta_semana">Esta semana</a>
+    <a class="btn-periodo {{ 'activo' if datos.periodo == 'semana_pasada' else '' }}"
+       href="/metricas?periodo=semana_pasada">Semana pasada</a>
+    <a class="btn-periodo {{ 'activo' if datos.periodo == 'este_mes' else '' }}"
+       href="/metricas?periodo=este_mes">Este mes</a>
+    <a class="btn-periodo {{ 'activo' if datos.periodo == 'mes_pasado' else '' }}"
+       href="/metricas?periodo=mes_pasado">Mes pasado</a>
+</div>
+
+<!-- TARJETAS -->
+<div class="periodos">
+
+    <div class="tarjeta">
+        <div class="periodo-label">Hoy</div>
+        <div class="monto-servicios">${{ "{:,.0f}".format(datos.servicios_hoy).replace(",", ".") }}</div>
+        <div class="turnos-cantidad">{{ datos.turnos_hoy }} turno(s)</div>
+        <div class="monto-productos">+ ${{ "{:,.0f}".format(datos.productos_hoy).replace(",", ".") }} en productos</div>
+        <div class="total-combinado">Total: ${{ "{:,.0f}".format(datos.servicios_hoy + datos.productos_hoy).replace(",", ".") }}</div>
+    </div>
+
+    <div class="tarjeta" style="border-color: var(--texto);">
+        <div class="periodo-label">{{ datos.etiqueta_periodo }} · {{ datos.desde }} al {{ datos.hasta }}</div>
+        <div class="monto-servicios">${{ "{:,.0f}".format(datos.servicios_periodo).replace(",", ".") }}</div>
+        <div class="turnos-cantidad">{{ datos.turnos_periodo }} turno(s)</div>
+        <div class="monto-productos">+ ${{ "{:,.0f}".format(datos.productos_periodo).replace(",", ".") }} en productos</div>
+        <div class="total-combinado">Total: ${{ "{:,.0f}".format(datos.servicios_periodo + datos.productos_periodo).replace(",", ".") }}</div>
+    </div>
+
+</div>
+
+<!-- RANKINGS -->
+<div class="rankings">
+
+    <div class="ranking-card">
+        <h2>Servicios mas realizados</h2>
+        {% if datos.servicios_top %}
+        <ol>{% for nombre, cantidad in datos.servicios_top %}
+            <li>{{ nombre }}<span class="cantidad">{{ cantidad }} vez/veces</span></li>
+        {% endfor %}</ol>
+        {% else %}<p class="sin-datos">Sin datos para este periodo.</p>{% endif %}
+    </div>
+
+    <div class="ranking-card">
+        <h2>Productos mas vendidos</h2>
+        {% if datos.productos_top %}
+        <ol>{% for nombre, total in datos.productos_top %}
+            <li>{{ nombre }}<span class="cantidad">{{ total }} unid.</span></li>
+        {% endfor %}</ol>
+        {% else %}<p class="sin-datos">Sin datos para este periodo.</p>{% endif %}
+    </div>
+
+    <div class="ranking-card">
+        <h2>Clientes mas frecuentes</h2>
+        {% if datos.clientes_top %}
+        <ol>{% for nombre, apellido, visitas in datos.clientes_top %}
+            <li>{{ nombre }} {{ apellido }}<span class="cantidad">{{ visitas }} visita(s)</span></li>
+        {% endfor %}</ol>
+        {% else %}<p class="sin-datos">Sin datos todavia.</p>{% endif %}
+    </div>
+
+</div>
+
+<!-- CLIENTES A RECUPERAR -->
+<div class="card">
+    <h2>Clientes a recuperar (mas de 30 dias sin venir)</h2>
+    {% if datos.clientes_inactivos %}
+    <table>
+        <tr><th>Cliente</th><th>Telefono</th><th>Ultimo turno</th><th>Dias sin venir</th></tr>
+        {% for c in datos.clientes_inactivos %}
+        <tr>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.telefono or "—" }}</td>
+            <td>{{ c.ultimo_turno }}</td>
+            <td><span class="dias-badge">{{ c.dias }} dias</span></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p class="sin-datos">Ningun cliente lleva mas de 30 dias sin venir.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

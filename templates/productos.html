@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/stock/productos">Productos</a>
+        <a href="/clientes">Clientes</a>
+    </div>
+    <div class="acciones">
+        <a class="btn-destacado" href="/metricas">Ver metricas</a>
+    </div>
+</nav>
+
+<h1>Productos de venta</h1>
+
+<div class="card" style="margin-bottom: 24px;">
+    <h2 style="margin-bottom: 16px;">Agregar producto</h2>
+    <form class="form-inline" action="/stock/productos/crear" method="post">
+        <div>
+            <label style="font-size:0.78em; font-weight:600; color:var(--texto-suave); text-transform:uppercase; display:block; margin-bottom:4px;">Nombre</label>
+            <input type="text" name="nombre" placeholder="Ej: Sérum vitamina C" required style="width:220px;">
+        </div>
+        <div>
+            <label style="font-size:0.78em; font-weight:600; color:var(--texto-suave); text-transform:uppercase; display:block; margin-bottom:4px;">Precio</label>
+            <input type="number" name="precio" placeholder="15000" required style="width:120px;">
+        </div>
+        <div>
+            <label style="font-size:0.78em; font-weight:600; color:var(--texto-suave); text-transform:uppercase; display:block; margin-bottom:4px;">Stock inicial</label>
+            <input type="number" name="stock" placeholder="0" value="0" required style="width:100px;">
+        </div>
+        <div style="align-self:flex-end;">
+            <button type="submit" class="btn-destacado">Agregar</button>
+        </div>
+    </form>
+</div>
+
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Acciones</th>
+    </tr>
+    {% for p in productos %}
+    <tr>
+        <td>{{ p.nombre }}</td>
+        <td>${{ "%.0f"|format(p.precio) }}</td>
+        <td style="{{ 'color:var(--rojo); font-weight:600;' if p.stock <= 2 else '' }}">
+            {{ p.stock }} unid.
+        </td>
+        <td>
+            <a href="/stock/productos/editar/{{ p.id }}">Editar</a> ·
+            <a href="/stock/productos/eliminar/{{ p.id }}"
+               onclick="return confirm('Eliminar este producto?')"
+               style="color:var(--rojo)">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

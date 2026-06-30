@@ -1,0 +1,487 @@
+/* ================================
+   VARIABLES
+================================ */
+:root {
+    --bg: #fafafa;
+    --bg-card: #ffffff;
+    --borde: #c4c4c4;
+    --texto: #1a1a1a;
+    --texto-suave: #888;
+    --acento: #2563eb;
+    --acento-hover: #1d4ed8;
+    --verde: #16a34a;
+    --amarillo: #d97706;
+    --rojo: #dc2626;
+    --radio: 4px;
+}
+
+/* ================================
+   BASE
+================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--texto);
+    padding: 28px 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+h1 {
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--texto);
+    letter-spacing: -0.3px;
+}
+
+h2 {
+    font-size: 1em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--texto);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+h3 {
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+a { color: var(--acento); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+hr {
+    border: none;
+    border-top: 1px solid var(--borde);
+    margin: 20px 0;
+}
+
+/* ================================
+   NAVEGACION
+================================ */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--borde);
+    margin-bottom: 28px;
+}
+
+nav .links a {
+    margin-right: 24px;
+    color: var(--texto-suave);
+    font-size: 0.9em;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+nav .links a:hover {
+    color: var(--texto);
+    text-decoration: none;
+}
+
+nav .acciones { display: flex; gap: 8px; }
+
+/* ================================
+   BOTONES
+================================ */
+.btn-destacado {
+    background: var(--texto);
+    color: white;
+    padding: 7px 16px;
+    border-radius: var(--radio);
+    font-size: 0.85em;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    letter-spacing: 0.2px;
+}
+
+.btn-destacado:hover {
+    background: #333;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-eliminar {
+    color: var(--rojo);
+    font-size: 0.82em;
+    border: 1px solid var(--borde);
+    padding: 4px 10px;
+    border-radius: var(--radio);
+    background: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-eliminar:hover {
+    border-color: var(--rojo);
+    text-decoration: none;
+}
+
+.btn-secundario {
+    background: white;
+    color: var(--texto);
+    border: 1px solid var(--borde);
+    padding: 7px 16px;
+    border-radius: var(--radio);
+    font-size: 0.85em;
+    cursor: pointer;
+    display: inline-block;
+}
+
+/* ================================
+   FORMULARIOS
+================================ */
+.form-inline {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-inline input,
+.form-inline select {
+    padding: 7px 10px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    font-size: 0.9em;
+    background: white;
+    color: var(--texto);
+    outline: none;
+}
+
+.form-inline input:focus,
+.form-inline select:focus {
+    border-color: var(--acento);
+}
+
+.form-inline button {
+    padding: 7px 14px;
+    background: var(--texto);
+    color: white;
+    border: none;
+    border-radius: var(--radio);
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.form-bloque label {
+    display: block;
+    font-size: 0.82em;
+    font-weight: 600;
+    color: var(--texto-suave);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-top: 16px;
+    margin-bottom: 5px;
+}
+
+.form-bloque input,
+.form-bloque select,
+.form-bloque textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid var(--borde);
+    border-radius: var(--radio);
+    font-size: 0.9em;
+    background: white;
+    color: var(--texto);
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.form-bloque input:focus,
+.form-bloque select:focus,
+.form-bloque textarea:focus {
+    border-color: var(--acento);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+
+.form-bloque button[type="submit"] {
+    margin-top: 20px;
+    padding: 9px 22px;
+    background: var(--texto);
+    color: white;
+    border: none;
+    border-radius: var(--radio);
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+/* ================================
+   TABLAS
+================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    overflow: hidden;
+}
+
+th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.78em;
+    font-weight: 600;
+    color: var(--texto-suave);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--borde);
+    background: var(--bg);
+}
+
+td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: top;
+    font-size: 0.9em;
+}
+
+tr:last-child td { border-bottom: none; }
+
+/* ================================
+   TARJETAS
+================================ */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+/* ================================
+   LISTA DE ITEMS
+================================ */
+.lista-items {
+    list-style: none;
+    padding: 0;
+}
+
+.lista-items li {
+    background: var(--bg-card);
+    padding: 11px 16px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+/* ================================
+   BADGES
+================================ */
+.badge-confirmado {
+    font-size: 0.72em;
+    font-weight: 600;
+    background: #dcfce7;
+    color: var(--verde);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.2px;
+}
+
+.badge-pendiente {
+    font-size: 0.72em;
+    font-weight: 600;
+    background: #fef3c7;
+    color: var(--amarillo);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.2px;
+}
+
+/* ================================
+   MENSAJES
+================================ */
+.error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: var(--rojo);
+    padding: 10px 14px;
+    border-radius: var(--radio);
+    margin-bottom: 16px;
+    font-size: 0.9em;
+}
+
+.aviso {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    padding: 10px 14px;
+    border-radius: var(--radio);
+    margin-bottom: 16px;
+    font-size: 0.9em;
+}
+
+/* ================================
+   AGENDA
+================================ */
+.turno-confirmado {
+    background: #f0fdf4;
+    border-left: 3px solid var(--verde);
+    padding: 6px 8px;
+    margin-bottom: 5px;
+    border-radius: 2px;
+    font-size: 0.88em;
+}
+
+.turno-pendiente {
+    background: #fffbeb;
+    border-left: 3px solid var(--amarillo);
+    padding: 6px 8px;
+    margin-bottom: 5px;
+    border-radius: 2px;
+    font-size: 0.88em;
+}
+
+.en-curso {
+    background: var(--bg);
+    color: var(--borde);
+    padding: 6px 8px;
+    border-radius: 2px;
+    font-size: 0.88em;
+    border-left: 3px solid var(--borde);
+}
+
+.libre {
+    color: var(--texto-suave);
+    font-size: 0.85em;
+}
+
+.nuevo-turno {
+    font-size: 0.8em;
+    color: var(--acento);
+    display: inline-block;
+    margin-top: 3px;
+}
+
+.nuevo-turno:hover { text-decoration: underline; }
+
+.editar-link {
+    font-size: 0.76em;
+    color: var(--texto-suave);
+    display: inline-block;
+    margin-top: 3px;
+}
+
+.editar-link:hover { color: var(--texto); text-decoration: none; }
+
+/* ================================
+   METRICAS
+================================ */
+.periodos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.tarjeta {
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 18px 20px;
+}
+
+.periodo-label {
+    font-size: 0.72em;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--texto-suave);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.monto-servicios {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--texto);
+    letter-spacing: -0.5px;
+}
+
+.turnos-cantidad {
+    font-size: 0.82em;
+    color: var(--texto-suave);
+    margin-top: 3px;
+}
+
+.monto-productos {
+    font-size: 0.95em;
+    color: var(--acento);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--borde);
+}
+
+.total-combinado {
+    font-size: 0.8em;
+    color: var(--texto-suave);
+    margin-top: 3px;
+}
+
+.rankings {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ranking-card {
+    background: var(--bg-card);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 18px 20px;
+}
+
+.ranking-card ol { padding-left: 18px; }
+
+.ranking-card li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--borde);
+    font-size: 0.88em;
+    color: var(--texto);
+}
+
+.ranking-card li:last-child { border-bottom: none; }
+
+.cantidad {
+    float: right;
+    color: var(--texto-suave);
+    font-size: 0.85em;
+}
+
+.dias-badge {
+    background: #fef3c7;
+    color: var(--amarillo);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+/* ================================
+   UTILIDADES
+================================ */
+.sin-datos {
+    color: var(--texto-suave);
+    font-style: italic;
+    font-size: 0.88em;
+}
+
+.texto-suave { color: var(--texto-suave); }

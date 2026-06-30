@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Profesionales</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/servicios">Servicios</a>
+        <a href="/profesionales">Profesionales</a>
+        <a href="/boxes">Boxes</a>
+        <a href="/clientes">Clientes</a>
+        <a href="/stock/productos">Productos</a>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <a class="btn-destacado" href="/stock/productos">Productos</a>
+        <a class="btn-destacado" href="/metricas">Ver metricas</a>
+    </div>
+</nav>
+
+<h2>Profesionales</h2>
+
+<form action="/profesionales/crear" method="post" class="form-inline">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <button type="submit">Agregar</button>
+</form>
+
+<hr>
+
+<ul class="lista-items">
+{% for p in profesionales %}
+    <li>
+        <span>{{ p.nombre }}</span>
+        <a href="/profesionales/eliminar/{{ p.id }}"
+           onclick="return confirm('Eliminar a {{ p.nombre }}?')"
+           class="btn-eliminar">Eliminar</a>
+    </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar venta</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 450px; }
+        label { display: block; margin-top: 14px; font-weight: bold; }
+        select, input { width: 100%; padding: 7px; margin-top: 4px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
+        .error { background: #ffe0e0; border: 1px solid #c00; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+        .info-cliente { background: #f5f5f5; padding: 12px; border-radius: 4px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<a href="/clientes/{{ cliente.id }}">← Volver al cliente</a>
+
+<h2>Registrar venta</h2>
+
+<div class="info-cliente">
+    <strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong><br>
+    {% if cliente.tipo_piel %}
+        Tipo de piel: {{ cliente.tipo_piel }}
+    {% endif %}
+</div>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+<form action="/stock/venta/{{ cliente.id }}" method="post">
+    <label>Producto:</label>
+    <select name="producto_id" required>
+        {% for p in productos %}
+            <option value="{{ p.id }}">
+                {{ p.nombre }} — ${{ "%.0f"|format(p.precio) }} (stock: {{ p.stock }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Cantidad:</label>
+    <input type="number" name="cantidad" value="1" min="1" required>
+
+    <button type="submit">Registrar venta</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Servicio</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>.form-bloque { max-width: 400px; }</style>
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/servicios">← Volver a servicios</a>
+    </div>
+</nav>
+
+<h1>Editar: {{ servicio.nombre }}</h1>
+
+<form class="form-bloque" action="/servicios/editar/{{ servicio.id }}" method="post">
+
+    <label>Nombre</label>
+    <input type="text" name="nombre" value="{{ servicio.nombre }}" required>
+
+    <label>Duración (min)</label>
+    <input type="number" name="duracion_min" value="{{ servicio.duracion_min }}" required>
+
+    <label>Precio tarjeta / QR / Transferencia</label>
+    <input type="number" name="precio_tarjeta" value="{{ servicio.precio_tarjeta }}" required>
+
+    <label>Precio efectivo</label>
+    <input type="number" name="precio_contado" value="{{ servicio.precio_contado }}" required>
+
+    <label>Capacidad</label>
+    <select name="capacidad_requerida">
+        <option value="1" {{ "selected" if servicio.capacidad_requerida == 1 }}>1 persona</option>
+        <option value="2" {{ "selected" if servicio.capacidad_requerida == 2 }}>2 personas</option>
+    </select>
+
+    <button type="submit" class="btn-destacado" style="margin-top:20px;">Guardar cambios</button>
+</form>
+
+</body>
+</html>

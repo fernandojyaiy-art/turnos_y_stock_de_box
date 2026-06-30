@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/clientes">Clientes</a>
+        <a href="/stock/productos">Productos</a>
+    </div>
+    <div class="acciones">
+        <a class="btn-destacado" href="/metricas">Ver metricas</a>
+    </div>
+</nav>
+
+<h1>Clientes</h1>
+
+<form class="form-inline" method="get" action="/clientes">
+    <input type="text" name="q" placeholder="Buscar por nombre, apellido o telefono..." value="{{ busqueda }}" autofocus>
+    <button type="submit">Buscar</button>
+    {% if busqueda %}<a href="/clientes">Limpiar</a>{% endif %}
+</form>
+
+{% if clientes %}
+    <p class="texto-suave" style="margin-bottom:12px;">{{ clientes|length }} cliente(s) encontrado(s)</p>
+    <ul class="lista-items">
+        {% for cliente in clientes %}
+        <li>
+            <a href="/clientes/{{ cliente.id }}"><strong>{{ cliente.nombre }} {{ cliente.apellido }}</strong></a>
+            <span class="texto-suave">{{ cliente.telefono or "Sin telefono" }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="sin-datos">
+        {% if busqueda %}No se encontraron clientes para "{{ busqueda }}".
+        {% else %}Todavia no hay clientes cargados.{% endif %}
+    </p>
+{% endif %}
+
+</body>
+</html>

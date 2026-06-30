@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda - {{ fecha }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/servicios">Servicios</a>
+        <a href="/profesionales">Profesionales</a>
+        <a href="/boxes">Boxes</a>
+        <a href="/clientes">Clientes</a>
+    </div>
+    <div class="acciones">
+        <a class="btn-destacado" href="/stock/productos">Productos</a>
+        <a class="btn-destacado" href="/metricas">Ver metricas</a>
+    </div>
+</nav>
+
+<h1>Agenda del dia: {{ fecha }}</h1>
+
+<form class="form-inline" method="get" action="/">
+    <label>Ver otra fecha:</label>
+    <input type="date" name="fecha" value="{{ fecha }}">
+    <button type="submit">Ver</button>
+</form>
+
+<table>
+    <tr>
+        <th>Hora</th>
+        {% for p in profesionales %}
+            <th>{{ p.nombre }}</th>
+        {% endfor %}
+    </tr>
+
+    {% for fila in grilla %}
+    <tr>
+        <td><strong>{{ fila.hora }}</strong></td>
+        {% for bloque in fila.bloques %}
+        <td>
+            {% if bloque.en_curso %}
+                <div class="en-curso">—</div>
+            {% elif bloque.disponible %}
+                <span class="libre">Libre</span><br>
+                <a class="nuevo-turno" href="/nuevo?hora={{ fila.hora }}&fecha={{ fecha }}&profesional_id={{ bloque.profesional_id }}">+ Turno</a>
+            {% else %}
+                {% for t in bloque.turnos %}
+                    <div class="{{ 'turno-confirmado' if t.confirmado else 'turno-pendiente' }}">
+                        <strong><a href="/clientes/{{ t.cliente.id }}" style="color:inherit;">{{ t.cliente.nombre }} {{ t.cliente.apellido }}</a></strong>
+                        <span class="{{ 'badge-confirmado' if t.confirmado else 'badge-pendiente' }}">
+                            {{ "Confirmado" if t.confirmado else "Pendiente" }}
+                        </span>
+                        <br>
+                        <small>{{ t.servicio.nombre }}</small>
+                        {% if t.box %}&nbsp;· <small>{{ t.box.nombre }}</small>{% endif %}
+                        <br>
+                        <a class="editar-link" href="/turnos/{{ t.id }}/editar">Editar / Cancelar</a>
+                    </div>
+                {% endfor %}
+                <a class="nuevo-turno" href="/nuevo?hora={{ fila.hora }}&fecha={{ fecha }}&profesional_id={{ bloque.profesional_id }}">+ Turno</a>
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Producto</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>.form-bloque { max-width: 400px; }</style>
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/stock/productos">← Volver a productos</a>
+    </div>
+</nav>
+
+<h1>Editar: {{ producto.nombre }}</h1>
+
+<form class="form-bloque" action="/stock/productos/editar/{{ producto.id }}" method="post">
+
+    <label>Nombre</label>
+    <input type="text" name="nombre" value="{{ producto.nombre }}" required>
+
+    <label>Precio</label>
+    <input type="number" name="precio" value="{{ producto.precio }}" required>
+
+    <label>Stock actual</label>
+    <input type="number" name="stock" value="{{ producto.stock }}" required>
+
+    <button type="submit" class="btn-destacado" style="margin-top:20px;">Guardar cambios</button>
+</form>
+
+</body>
+</html>

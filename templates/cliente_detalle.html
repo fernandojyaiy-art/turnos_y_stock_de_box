@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cliente - {{ cliente.nombre }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .descripcion-turno {
+            font-size: 0.82em;
+            color: var(--texto-suave);
+            margin-top: 4px;
+            font-style: italic;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="links">
+        <a href="/">Agenda</a>
+        <a href="/clientes">Clientes</a>
+    </div>
+    <div class="acciones">
+        <a class="btn-destacado" href="/stock/venta/{{ cliente.id }}">+ Registrar venta</a>
+    </div>
+</nav>
+
+<h1>{{ cliente.nombre }} {{ cliente.apellido }}</h1>
+
+<div class="card">
+    <form class="form-inline" action="/clientes/{{ cliente.id }}/editar" method="post">
+        <div>
+            <label style="font-size:0.78em; font-weight:600; color:var(--texto-suave); text-transform:uppercase; display:block; margin-bottom:4px;">Telefono</label>
+            <input type="text" name="telefono" value="{{ cliente.telefono or '' }}" placeholder="Ej: 1122334455">
+        </div>
+        <div>
+            <label style="font-size:0.78em; font-weight:600; color:var(--texto-suave); text-transform:uppercase; display:block; margin-bottom:4px;">Tipo de piel</label>
+            <input type="text" name="tipo_piel" value="{{ cliente.tipo_piel or '' }}" placeholder="Ej: mixta, seca, sensible..." style="width:220px;">
+        </div>
+        <div style="align-self:flex-end;">
+            <button type="submit" class="btn-destacado">Guardar</button>
+        </div>
+    </form>
+</div>
+
+<h2>Historial de turnos</h2>
+{% if cliente.turnos %}
+<table>
+    <tr>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Servicio</th>
+        <th>Profesional</th>
+        <th>Estado</th>
+        <th>Notas del tratamiento</th>
+        <th>Recomendación</th>
+        <th></th>
+    </tr>
+    {% for t in cliente.turnos | sort(attribute='fecha', reverse=True) %}
+    <tr>
+        <td>{{ t.fecha }}</td>
+        <td>{{ t.hora_inicio.strftime('%H:%M') }}</td>
+        <td>{{ t.servicio.nombre }}</td>
+        <td>{{ t.profesional.nombre }}</td>
+        <td>
+            <span class="{{ 'badge-confirmado' if t.confirmado else 'badge-pendiente' }}">
+                {{ "Confirmado" if t.confirmado else "Pendiente" }}
+            </span>
+        </td>
+        <td>
+            {% if t.descripcion %}
+                <div class="descripcion-turno">{{ t.descripcion }}</div>
+            {% else %}
+                <span class="sin-datos">Sin notas</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if t.recomendacion %}
+                <div class="descripcion-turno">{{ t.recomendacion }}</div>
+            {% else %}
+                <span class="sin-datos">—</span>
+            {% endif %}
+        </td>
+        <td>
+            <a class="editar-link" href="/turnos/{{ t.id }}/editar">Editar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p class="sin-datos">Sin turnos registrados.</p>
+{% endif %}
+
+<h2 style="margin-top:28px;">Historial de compras</h2>
+{% if cliente.ventas %}
+<table>
+    <tr>
+        <th>Fecha</th><th>Producto</th><th>Cantidad</th><th>Total</th>
+    </tr>
+    {% for v in cliente.ventas | sort(attribute='fecha', reverse=True) %}
+    <tr>
+        <td>{{ v.fecha }}</td>
+        <td>{{ v.producto.nombre }}</td>
+        <td>{{ v.cantidad }}</td>
+        <td>${{ "%.0f"|format(v.producto.precio * v.cantidad) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <p class="sin-datos">Sin compras registradas.</p>
+{% endif %}
+
+</body>
+</html>
