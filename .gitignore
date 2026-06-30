@@ -1,6 +1,20 @@
-*.db
+# Python
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+
+# Base de datos local
+turnos.db
+
+# Backups
 backup_datos.json
-g
+
+# Entorno virtual
+.venv/
+venv/
+
+# VSCode
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
