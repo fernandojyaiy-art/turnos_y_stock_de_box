@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from datetime import date, time, datetime, timedelta
 
 from core.database import get_db
+from core.auth import login_requerido
 from . import services
 
 router = APIRouter()
@@ -17,6 +18,8 @@ templates = Jinja2Templates(directory="templates")
 
 @router.get("/")
 def agenda(request: Request, fecha: str = None, db: Session = Depends(get_db)):
+    redir = login_requerido(request)
+    if redir: return redir
     if not fecha:
         ahora = datetime.now()
         if ahora.hour >= 19:
@@ -29,6 +32,7 @@ def agenda(request: Request, fecha: str = None, db: Session = Depends(get_db)):
 
     if not profesionales or not servicios:
         return templates.TemplateResponse("primer_uso.html", {"request": request})
+
     grilla = services.armar_grilla(db, fecha)
 
     return templates.TemplateResponse("agenda.html", {
@@ -151,8 +155,6 @@ def editar_turno(
     confirmado: str = Form("false"),
     monto_seña: float = Form(0),
     forma_pago: str = Form("tarjeta"),
-    descripcion: str = Form(""),
-    recomendacion: str = Form(""),
     db: Session = Depends(get_db)
 ):
     hora_obj = time.fromisoformat(hora + ":00")
@@ -170,7 +172,7 @@ def editar_turno(
             "error": f"El box ya tiene un turno CONFIRMADO a las {hora}.",
         })
 
-    services.editar_turno(db, turno_id, fecha_obj, hora_obj, profesional_id, box_id, servicio_id, confirmado == "true", monto_seña, forma_pago, descripcion, recomendacion)
+    services.editar_turno(db, turno_id, fecha_obj, hora_obj, profesional_id, box_id, servicio_id, confirmado, forma_pago)
     return RedirectResponse(f"/?fecha={fecha}", status_code=303)
 
 

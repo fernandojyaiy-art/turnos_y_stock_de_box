@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+        .login-card {
+            background: white;
+            border: 1px solid var(--borde);
+            border-radius: var(--radio);
+            padding: 36px 40px;
+            width: 100%;
+            max-width: 360px;
+        }
+        .login-card h1 {
+            font-size: 1.2em;
+            margin-bottom: 6px;
+        }
+        .login-card p {
+            color: var(--texto-suave);
+            font-size: 0.88em;
+            margin-bottom: 24px;
+        }
+        .login-card label {
+            display: block;
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--texto-suave);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 6px;
+        }
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            border: 1.5px solid var(--borde);
+            border-radius: var(--radio);
+            font-size: 1em;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .login-card input:focus {
+            border-color: var(--acento);
+        }
+        .login-card button {
+            width: 100%;
+            padding: 10px;
+            background: var(--texto);
+            color: white;
+            border: none;
+            border-radius: var(--radio);
+            font-size: 0.95em;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        .login-card button:hover {
+            background: #333;
+        }
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: var(--rojo);
+            padding: 10px 14px;
+            border-radius: var(--radio);
+            font-size: 0.88em;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h1>AC Cosmetología</h1>
+    <p>Ingresá la contraseña para continuar</p>
+
+    {% if error %}
+    <div class="error">Contraseña incorrecta. Intentá de nuevo.</div>
+    {% endif %}
+
+    <form action="/login" method="post">
+        <label>Contraseña</label>
+        <input type="password" name="contrasena" autofocus required>
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+
+</body>
+</html>
