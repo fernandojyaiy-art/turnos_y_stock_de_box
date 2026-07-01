@@ -29,7 +29,6 @@ def agenda(request: Request, fecha: str = None, db: Session = Depends(get_db)):
 
     if not profesionales or not servicios:
         return templates.TemplateResponse("primer_uso.html", {"request": request})
-
     grilla = services.armar_grilla(db, fecha)
 
     return templates.TemplateResponse("agenda.html", {
