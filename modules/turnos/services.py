@@ -245,7 +245,7 @@ def crear_turno(db, fecha, hora_inicio, cliente_id, servicio_id, profesional_id,
 
 
 def editar_turno(db, turno_id, fecha, hora_inicio, profesional_id, box_id,
-                 servicio_id, confirmado, monto_seña=0, forma_pago=None):
+                 servicio_id, confirmado, monto_seña=0, forma_pago=None, descripcion="", recomendacion=""):
     turno = obtener_turno(db, turno_id)
     if turno:
         turno.fecha = fecha
@@ -256,6 +256,8 @@ def editar_turno(db, turno_id, fecha, hora_inicio, profesional_id, box_id,
         turno.confirmado = confirmado
         turno.monto_seña = monto_seña
         turno.forma_pago = forma_pago
+        turno.descripcion = descripcion
+        turno.recomendacion = recomendacion
         db.commit()
     return turno
 

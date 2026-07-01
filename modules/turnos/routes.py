@@ -152,6 +152,8 @@ def editar_turno(
     confirmado: str = Form("false"),
     monto_seña: float = Form(0),
     forma_pago: str = Form("tarjeta"),
+    descripcion: str = Form(""),
+    recomendacion: str = Form(""),
     db: Session = Depends(get_db)
 ):
     hora_obj = time.fromisoformat(hora + ":00")
@@ -169,7 +171,7 @@ def editar_turno(
             "error": f"El box ya tiene un turno CONFIRMADO a las {hora}.",
         })
 
-    services.editar_turno(db, turno_id, fecha_obj, hora_obj, profesional_id, box_id, servicio_id, confirmado, forma_pago)
+    services.editar_turno(db, turno_id, fecha_obj, hora_obj, profesional_id, box_id, servicio_id, confirmado == "true", monto_seña, forma_pago, descripcion, recomendacion)
     return RedirectResponse(f"/?fecha={fecha}", status_code=303)
 
 
