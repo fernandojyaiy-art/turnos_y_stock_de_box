@@ -13,6 +13,8 @@ from modules.stock import models as stock_models
 
 from modules.turnos.routes import router as turnos_router
 from modules.stock.routes import router as stock_router
+from core.auth_middleware import AuthMiddleware
+app = FastAPI()
 
 app = FastAPI()
 
@@ -20,6 +22,8 @@ app.add_middleware(
     SessionMiddleware,
     secret_key=os.getenv("SECRET_KEY", "clave-local-desarrollo")
 )
+
+app.add_middleware(AuthMiddleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
